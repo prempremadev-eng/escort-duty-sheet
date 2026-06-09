@@ -1,0 +1,1159 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f7fb;
+    font-size: 14px;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h2 {
+    text-align: center;
+    margin: 6px 0 2px;
+    font-size: clamp(16px, 4vw, 22px);
+    color: #0d3b66;
+}
+
+#currentDay {
+    width: 100%;
+    text-align: right;
+    font-size: clamp(13px, 3vw, 18px);
+    font-weight: bold;
+    color: #1e3a8a;
+    padding: 0 10px 2px;
+}
+
+.top-bar {
+    position: sticky;
+    top: 0;
+    background: #dbeafe;
+    z-index: 999;
+    padding: 6px 8px;
+    border-bottom: 3px solid #2563eb;
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.top-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: clamp(13px, 3vw, 16px);
+    font-weight: bold;
+}
+
+.top-bar-row label {
+    white-space: nowrap;
+}
+
+.top-bar input[type="date"],
+.top-bar input[type="number"],
+.top-bar input[type="text"] {
+    height: 36px;
+    font-size: 16px;
+    padding: 4px 8px;
+    border: 1.5px solid #94a3b8;
+    border-radius: 6px;
+    background: white;
+    -webkit-appearance: none;
+    appearance: none;
+    color: #111;
+    min-width: 0;
+}
+
+.top-bar input[type="date"] {
+    min-width: 140px;
+}
+
+.top-bar button {
+    height: 36px;
+    font-size: clamp(13px, 3vw, 15px);
+    padding: 0 12px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 44px;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.top-bar button:active { background: #1d4ed8; transform: scale(0.97); }
+.top-bar button:hover  { background: #1d4ed8; }
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: white;
+    border: 1.5px solid #000;
+    margin: 0 auto;
+}
+
+th, td {
+    border: 1px solid #374151;
+    text-align: center;
+    padding: 2px;
+    font-size: clamp(13px, 1.6vw, 15px);
+    height: 44px;
+    line-height: 1.3;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+th {
+    background: #bfdbfe;
+    font-size: clamp(13px, 1.8vw, 16px);
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+tbody tr:nth-child(even) { background: #f9fafb; }
+/* Default highlight (Daily Print mode) — blue */
+.highlight-row { background: #bfdbfe !important; }
+
+/* Input mode highlight — yellow-green */
+body.mode-input .highlight-row { background: #bbf7d0 !important; }
+
+/* Daily Print mode highlight — sky blue */
+body.mode-supervisor .highlight-row { background: #bae6fd !important; }
+
+/* =============================================
+   MODE TOGGLE BUTTONS
+============================================= */
+.mode-toggle {
+    display: flex;
+    gap: 8px;
+}
+.mode-btn {
+    height: 36px;
+    padding: 0 16px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2.5px solid #2563eb;
+    border-radius: 8px;
+    background: white;
+    color: #2563eb;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+}
+
+/* Daily Print button — always green border */
+#btnSupervisor {
+    border-color: #16a34a;
+    color: #16a34a;
+}
+#btnSupervisor:hover {
+    background: #f0fdf4;
+}
+
+.mode-btn.active {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 0 0 3px #93c5fd;
+}
+
+/* Daily Print button active — green */
+#btnSupervisor.active {
+    background: #16a34a;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px #86efac;
+    color: white;
+}
+
+/* Test button — orange */
+#btnTest {
+    border-color: #d97706;
+    color: #d97706;
+}
+#btnTest:hover { background: #fffbeb !important; }
+#btnTest.active {
+    background: #d97706;
+    border-color: #d97706;
+    box-shadow: 0 0 0 3px #fcd34d;
+    color: white;
+}
+
+/* Test mode label */
+.test-label {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Input button active — blue */
+#btnInput.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px #93c5fd;
+}
+.mode-btn:not(.active):hover { background: #eff6ff; }
+#btnSupervisor:not(.active):hover { background: #f0fdf4 !important; }
+
+/* Mode label bar */
+.mode-label {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin-top: 2px;
+}
+.supervisor-label {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+.input-label {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+/* =============================================
+   DATA CELL (supervisor mode plain text)
+============================================= */
+.data-cell {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    padding: 2px 4px;
+    vertical-align: middle;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* ID cell — same font size as other cells, not bold */
+.id-cell {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #333 !important;
+    cursor: default;
+    pointer-events: none;
+    letter-spacing: 0.2px;
+}
+
+
+
+th:nth-child(1),  td:nth-child(1)  { width: 30px; }
+th:nth-child(2),  td:nth-child(2)  { width: 150px; }
+th:nth-child(3),  td:nth-child(3)  { width: 42px; }
+th:nth-child(4),  td:nth-child(4)  { width: 96px; }
+th:nth-child(5),  td:nth-child(5)  { width: 46px; }
+th:nth-child(6),  td:nth-child(6),
+th:nth-child(7),  td:nth-child(7),
+th:nth-child(8),  td:nth-child(8),
+th:nth-child(9),  td:nth-child(9)  { width: 96px; }
+th:nth-child(10), td:nth-child(10) { width: 65px; }
+
+.route-cell {
+    padding: 0 !important;
+    height: 44px;
+}
+
+.route-box {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    flex-direction: column;
+}
+
+.route-top {
+    height: 22px;
+    border-bottom: 1px solid #374151;
+    display: flex;
+    align-items: center;
+}
+
+.route-bottom {
+    height: 22px;
+    display: flex;
+}
+
+.route-half {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-half:first-child { border-right: 1px solid #374151; }
+
+.route-location,
+.route-time {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    padding: 0 1px;
+    box-sizing: border-box;
+    font-family: inherit;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+}
+
+/* Location placeholder */
+.route-location::placeholder {
+    color: #999;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.route-time {
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    caret-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Out / In placeholder */
+.route-time::placeholder {
+    color: #888;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.route-time:active { background: #dbeafe; }
+
+.route-time::-webkit-calendar-picker-indicator {
+    display: none !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+}
+
+@media screen and (max-width: 768px) {
+    .route-location { font-size: 16px; }
+    .route-time     { font-size: 13px; }
+    .route-location::placeholder { font-size: 12px; }
+    .route-time::placeholder     { font-size: 11px; }
+}
+
+.cell-input {
+    width: 100%;
+    height: 100%;
+    min-height: 30px;
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    font-size: 14px;
+    font-family: inherit;
+    padding: 0 2px;
+    box-sizing: border-box;
+    color: #111;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+}
+
+.cell-input:focus,
+.route-location:focus,
+.route-time:focus { background: #eff6ff; }
+
+.footer-row td {
+    height: 15px;
+    font-size: clamp(9px, 1.1vw, 11px);
+    background: #e0f2fe;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.footer-row td[rowspan] {
+    background: #dbeafe;
+    font-size: clamp(11px, 1.4vw, 13px);
+    color: #1e3a8a;
+    vertical-align: middle;
+}
+
+.print-page-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 4px;
+    font-weight: bold;
+    padding-right: 4px;
+}
+
+.page-date {
+    font-size: clamp(12px, 2vw, 14px);
+    color: #1e3a8a;
+}
+
+.page-break {
+    display: block;
+    height: 20px;
+    background: #e2e8f0;
+    margin: 8px 0;
+    border-radius: 4px;
+}
+
+.print-brand { display: none; }
+
+
+
+
+/* Desktop native time input */
+.desktop-time {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #000;
+    padding: 0;
+    font-family: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+/* Show clock icon on desktop */
+.desktop-time::-webkit-calendar-picker-indicator {
+    opacity: 0.5;
+    cursor: pointer;
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    margin: 0;
+}
+
+.desktop-time:hover::-webkit-calendar-picker-indicator {
+    opacity: 1;
+}
+
+/* Print — desktop time shows value cleanly */
+
+
+
+/* =============================================
+   DESKTOP TIME PICKER — Hour grid + Minute list
+============================================= */
+
+/* Hour grid buttons */
+.tg-btn {
+    height: 40px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: monospace;
+    padding: 0;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.1s;
+}
+.tg-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1e40af;
+}
+.tg-btn.tg-selected {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(37,99,235,0.35);
+}
+
+/* Minute scroll list items */
+.min-item {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: #475569;
+    font-family: monospace;
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 1px 3px;
+    transition: all 0.1s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+.min-item:hover {
+    background: #eff6ff;
+    color: #1e40af;
+}
+.min-item.min-selected {
+    background: #2563eb;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 2px 6px rgba(37,99,235,0.3);
+}
+
+
+/* In-time locked until Out-time is entered */
+.disabled-time {
+    background: #f1f5f9 !important;
+    color: #94a3b8 !important;
+    cursor: not-allowed !important;
+}
+.disabled-time::placeholder {
+    color: #cbd5e1 !important;
+}
+
+
+/* Locked time — both out and in after in-time is set */
+.locked-time {
+    background: #f0fdf4 !important;
+    color: #16a34a !important;
+    cursor: not-allowed !important;
+    font-weight: 700 !important;
+}
+.locked-time::placeholder {
+    color: #86efac !important;
+}
+
+
+/* Location autocomplete dropdown scrollbar */
+#locDrop::-webkit-scrollbar {
+    width: 4px;
+}
+#locDrop::-webkit-scrollbar-track {
+    background: transparent;
+}
+#locDrop::-webkit-scrollbar-thumb {
+    background: #93c5fd;
+    border-radius: 4px;
+}
+
+
+/* Invalid hours (outside shift 21:00-08:30) */
+.tg-invalid {
+    background: #f1f5f9 !important;
+    color: #cbd5e1 !important;
+    border-color: #e2e8f0 !important;
+    cursor: not-allowed !important;
+    text-decoration: line-through;
+}
+.tg-invalid:hover {
+    background: #f1f5f9 !important;
+    border-color: #e2e8f0 !important;
+    color: #cbd5e1 !important;
+}
+
+
+
+
+/* =============================================
+   STICKY THEAD — vertical scroll only
+============================================= */
+
+/* Stick header rows on vertical scroll */
+thead tr:first-child th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #bfdbfe;
+}
+
+thead tr:last-child th {
+    position: sticky;
+    top: 28px;
+    z-index: 10;
+    background: #bfdbfe;
+}
+
+/* =============================================
+   STICKY COLUMNS — S.No + Name (mobile scroll)
+============================================= */
+
+/* Make table allow sticky to work */
+.table-wrapper {
+    position: relative;
+}
+
+/* S.No column — sticky */
+th:nth-child(1),
+td:nth-child(1) {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: #fff;
+}
+
+th:nth-child(1) {
+    background: #bfdbfe;
+    z-index: 12;
+}
+
+/* Name column — sticky after S.No */
+th:nth-child(2),
+td:nth-child(2) {
+    position: sticky;
+    left: 30px;   /* = S.No column width */
+    z-index: 3;
+    background: #fff;
+}
+
+th:nth-child(2) {
+    background: #bfdbfe;
+    z-index: 12;
+}
+
+/* Shadow on Name column right edge — shows depth while scrolling */
+th:nth-child(2)::after,
+td:nth-child(2)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -4px;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0,0,0,0.08), transparent);
+    pointer-events: none;
+}
+
+/* Alternate row fix for sticky cells */
+tbody tr:nth-child(even) td:nth-child(1),
+tbody tr:nth-child(even) td:nth-child(2) {
+    background: #f9fafb;
+}
+
+/* Highlight row fix */
+.highlight-row td:nth-child(1),
+.highlight-row td:nth-child(2) {
+    background: #bae6fd !important;
+}
+body.mode-input .highlight-row td:nth-child(1),
+body.mode-input .highlight-row td:nth-child(2) {
+    background: #bbf7d0 !important;
+}
+
+
+/* Location auto-highlight when out-time set without location */
+.location-highlight {
+    background: #fef08a !important;
+    border-bottom: 2px solid #f59e0b !important;
+    animation: locPulse 0.6s ease-in-out 2;
+}
+
+@keyframes locPulse {
+    0%   { background: #fef08a; }
+    50%  { background: #fde047; }
+    100% { background: #fef08a; }
+}
+
+
+/* =============================================
+   ACTIVE ROW + DIM ROWS
+============================================= */
+
+/* Active row — bright highlight */
+tbody tr.active-row {
+    background: #fffbeb !important;
+    outline: 2px solid #f59e0b;
+    outline-offset: -1px;
+    position: relative;
+    z-index: 2;
+}
+
+tbody tr.active-row td {
+    background: #fffbeb !important;
+}
+
+/* Sticky columns in active row */
+tbody tr.active-row td:nth-child(1),
+tbody tr.active-row td:nth-child(2) {
+    background: #fffbeb !important;
+}
+
+/* Dim all other rows */
+tbody tr.dim-row {
+    opacity: 0.45;
+    transition: opacity 0.15s;
+}
+
+/* Out-time highlight when location is filled */
+.out-highlight {
+    background: #fef08a !important;
+    border-bottom: 2px solid #f59e0b !important;
+    animation: outPulse 0.5s ease-in-out 2;
+}
+
+@keyframes outPulse {
+    0%   { background: #fef08a; }
+    50%  { background: #fde047; }
+    100% { background: #fef08a; }
+}
+
+
+/* =============================================
+   SEQUENTIAL ROUTE LOCK
+============================================= */
+
+/* Locked route cell — greyed out */
+td.route-seq-locked .route-box {
+    background: #f8fafc;
+    opacity: 0.5;
+}
+
+td.route-seq-locked {
+    background: #f8fafc !important;
+}
+
+/* Disabled inputs inside locked route */
+.seq-disabled {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    background: transparent !important;
+    color: #94a3b8 !important;
+}
+
+/* Flash animation when wrong route tapped */
+.route-flash {
+    animation: routeFlash 0.4s ease-in-out 2;
+}
+
+@keyframes routeFlash {
+    0%   { background: #f8fafc; }
+    50%  { background: #fef08a; }
+    100% { background: #f8fafc; }
+}
+
+
+/* =============================================
+   MOBILE COLUMN WIDTHS — compact for small screens
+============================================= */
+@media screen and (max-width: 768px) {
+
+    table {
+        min-width: 750px;
+    }
+
+    /* S.No */
+    th:nth-child(1), td:nth-child(1) { width: 28px !important; }
+
+    /* Name */
+    th:nth-child(2), td:nth-child(2) { width: 110px !important; }
+
+    /* Agency */
+    th:nth-child(3), td:nth-child(3) { width: 32px !important; }
+
+    /* Mobile No */
+    th:nth-child(4), td:nth-child(4) { width: 80px !important; }
+
+    /* ID No */
+    th:nth-child(5), td:nth-child(5) { width: 36px !important; }
+
+    /* Route 1-4 */
+    th:nth-child(6),  td:nth-child(6),
+    th:nth-child(7),  td:nth-child(7),
+    th:nth-child(8),  td:nth-child(8),
+    th:nth-child(9),  td:nth-child(9)  { width: 88px !important; }
+
+    /* Remarks */
+    th:nth-child(10), td:nth-child(10) { width: 50px !important; }
+
+    /* Sticky left positions match new widths */
+    th:nth-child(2), td:nth-child(2) {
+        left: 28px !important;
+    }
+
+    /* Row height comfortable for touch */
+    th, td { height: 40px; }
+
+    /* Route box heights */
+    .route-cell  { height: 40px !important; }
+    .route-box   { height: 40px !important; }
+    .route-top   { height: 20px !important; }
+    .route-bottom{ height: 20px !important; }
+}
+
+@media print {
+    .desktop-time {
+        font-size: 8px !important;
+        font-weight: 700 !important;
+        color: #000 !important;
+        background: transparent !important;
+        border: none !important;
+    }
+}
+
+@media print {
+
+    *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-sizing: border-box;
+    }
+
+    @page {
+        size: A4 landscape;
+        margin: 4mm;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        background: white;
+        width: 100%;
+    }
+
+    .location-highlight,
+    .out-highlight {
+        background: transparent !important;
+        border-bottom: none !important;
+        animation: none !important;
+    }
+    tbody tr.dim-row  { opacity: 1 !important; }
+    td.route-seq-locked .route-box { background: transparent !important; opacity: 1 !important; }
+    td.route-seq-locked { background: transparent !important; }
+    .seq-disabled { pointer-events: auto !important; color: #000 !important; }
+    tbody tr.active-row { outline: none !important; background: inherit !important; }
+    tbody tr.active-row td { background: inherit !important; }
+
+    /* Remove sticky in print */
+    th:nth-child(1), td:nth-child(1),
+    th:nth-child(2), td:nth-child(2) {
+        position: static !important;
+        z-index: auto !important;
+        box-shadow: none !important;
+    }
+    th:nth-child(2)::after,
+    td:nth-child(2)::after { display: none !important; }
+
+    /* Hide everything except tables */
+    .top-bar,
+    #currentDay,
+    #printTip,
+    #timePicker    { display: none !important; }
+
+    h2             { display: none !important; }
+
+    .table-wrapper {
+        height: auto !important;
+        overflow: visible !important;
+        width: 100%;
+    }
+
+    /* ✅ Separator between pages — completely gone in print */
+    .page-break {
+        display: none !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* ✅ Each page-group = exactly 1 A4 page
+       A4 landscape: 297x210mm, margin 4mm = 289x202mm usable
+       Fixed height forces all content onto one page             */
+    .page-group {
+        display: block;
+        width:  289mm;
+        height: 202mm;
+        overflow: hidden;
+        page-break-after: always;
+        break-after: page;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .page-group:last-child {
+        page-break-after: auto;
+        break-after: auto;
+    }
+
+    /* Page date header */
+    .print-page-header {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        height: 5mm;
+        margin: 0 0 1mm 0;
+        padding: 0;
+    }
+    .page-date {
+        font-size: 10px;
+        font-weight: bold;
+        color: #1e3a8a;
+        line-height: 5mm;
+    }
+
+    /* ✅ Table fills remaining height of page-group
+       202mm - 5mm header - 1mm gap = 196mm              */
+    table {
+        width: 100%;
+        height: 196mm;
+        border-collapse: collapse;
+        table-layout: fixed;
+        border: 1.5px solid black;
+        min-width: unset;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Inner route/box — never break */
+    .route-box, .route-cell, .route-top, .route-bottom {
+        page-break-after:  auto   !important;
+        break-after:       auto   !important;
+        page-break-inside: avoid  !important;
+        break-inside:      avoid  !important;
+    }
+
+    tr, td, th {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    thead { display: table-header-group; }
+
+    /* thead row heights */
+    thead tr:first-child th {
+        height: 8mm !important;
+        font-size: 10px !important;
+        padding: 0 1px !important;
+        white-space: nowrap;
+        background: #bfdbfe !important;
+    }
+    thead tr:last-child th {
+        height: 5mm !important;
+        font-size: 9px !important;
+        padding: 0 1px !important;
+        background: #bfdbfe !important;
+    }
+
+    /* ✅ Data rows — 15 rows × 11mm = 165mm
+       + header 13mm + footer 16mm = 194mm ≤ 196mm ✅ */
+    tbody tr {
+        height: 11mm;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    td {
+        height: 11mm;
+        font-size: 9px;
+        padding: 0 1px;
+        vertical-align: middle;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 1px solid #374151;
+        text-align: center;
+    }
+
+    td:nth-child(2),
+    td:nth-child(3),
+    td:nth-child(4),
+    td:nth-child(5) {
+        font-size: 10px;
+        font-weight: 700;
+    }
+
+    /* ✅ Route cell — same height as tbody row */
+    .route-cell {
+        padding: 0 !important;
+        height: 11mm !important;
+    }
+    .route-box {
+        width: 100% !important;
+        height: 11mm !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    .route-top {
+        height: 5.5mm !important;
+        border-bottom: 1px solid #374151 !important;
+        display: flex !important;
+        align-items: center !important;
+        overflow: hidden !important;
+    }
+    .route-bottom {
+        height: 5.5mm !important;
+        display: flex !important;
+        overflow: hidden !important;
+    }
+    .route-half {
+        flex: 1 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+    }
+    .route-half:first-child {
+        border-right: 1px solid #374151 !important;
+    }
+
+    /* Route + cell inputs */
+    .route-location,
+    .route-time {
+        font-size: 8px !important;
+        font-weight: 700 !important;
+        color: #000 !important;
+        background: transparent !important;
+        border: none !important;
+        width: 100% !important;
+        height: 100% !important;
+        text-align: center !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+    .cell-input {
+        font-size: 9px !important;
+        font-weight: 700 !important;
+        color: #000 !important;
+        background: transparent !important;
+        border: none !important;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: unset !important;
+        padding: 0 !important;
+        text-align: center !important;
+    }
+
+    /* ✅ Footer — 4 rows × 4mm = 16mm */
+    .footer-row td {
+        height: 4mm !important;
+        font-size: 8px !important;
+        font-weight: bold;
+        background: #e0f2fe !important;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .footer-row td[rowspan] {
+        font-size: 9px !important;
+        background: #dbeafe !important;
+        vertical-align: middle;
+    }
+
+    /* Column widths for A4 landscape (289mm total) */
+    th:nth-child(1),  td:nth-child(1)  { width: 22px;  }
+    th:nth-child(2),  td:nth-child(2)  { width: 128px; }
+    th:nth-child(3),  td:nth-child(3)  { width: 34px;  }
+    th:nth-child(4),  td:nth-child(4)  { width: 78px;  }
+    th:nth-child(5),  td:nth-child(5)  { width: 40px;  }
+    th:nth-child(6),  td:nth-child(6),
+    th:nth-child(7),  td:nth-child(7),
+    th:nth-child(8),  td:nth-child(8),
+    th:nth-child(9),  td:nth-child(9)  { width: 90px;  }
+    th:nth-child(10), td:nth-child(10) { width: 52px;  }
+
+    .print-brand {
+        display: block;
+        position: fixed;
+        bottom: 2mm;
+        right: 4mm;
+        font-size: 8px;
+        color: #bbb;
+    }
+}
+
+
+
+@media screen and (max-width: 768px) {
+
+    /* Let the whole page scroll on mobile */
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+    }
+
+    .table-wrapper {
+        height: auto !important;
+        overflow-y: visible !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Sticky top-bar — scrolls away */
+    .top-bar {
+        position: relative !important;
+        top: auto !important;
+    }
+
+    /* thead sticky to page top on mobile */
+    thead tr:first-child th {
+        position: sticky !important;
+        top: 0px !important;
+        z-index: 20 !important;
+        background: #bfdbfe !important;
+    }
+
+    thead tr:last-child th {
+        position: sticky !important;
+        top: 28px !important;
+        z-index: 20 !important;
+        background: #bfdbfe !important;
+    }
+
+    /* Sticky S.No + Name columns */
+    th:nth-child(1), td:nth-child(1) {
+        position: sticky !important;
+        left: 0 !important;
+        z-index: 15 !important;
+        background: #fff !important;
+    }
+    th:nth-child(1) { background: #bfdbfe !important; z-index: 22 !important; }
+
+    th:nth-child(2), td:nth-child(2) {
+        position: sticky !important;
+        left: 28px !important;
+        z-index: 15 !important;
+        background: #fff !important;
+    }
+    th:nth-child(2) { background: #bfdbfe !important; z-index: 22 !important; }
+
+}
+
+@media screen and (max-width: 480px) {
+    h2 { font-size: 16px; margin: 4px 0 2px; }
+    .top-bar { padding: 6px; gap: 5px; }
+    .top-bar-row { gap: 5px; }
+    .top-bar button { height: 40px; padding: 0 10px; }
+    .top-bar input[type="date"],
+    .top-bar input[type="number"],
+    .top-bar input[type="text"] { height: 40px; font-size: 16px; }
+    .table-wrapper { height: calc(100vh - 150px); }
+}
+
+@media screen and (min-width: 481px) and (max-width: 1024px) {
+    .table-wrapper { height: calc(100vh - 115px); }
+    table { min-width: 950px; }
+}

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#2563eb">
+    <title>Escort Duty Sheet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h2>Escort Duty Sheet <span style="font-size:11px;color:#64748b;font-weight:normal;margin-left:6px;">v1.4</span></h2>
+    <div id="currentDay"></div>
+
+    <div class="top-bar">
+
+        <!-- Row 1: Date / Shift / Mode Toggle / Print / Upload -->
+        <div class="top-bar-row">
+            <label>Date:</label>
+            <input type="date" id="date">
+
+            <label>Shift:</label>
+            <input type="number" id="shiftValue" value="4" min="1" style="width:60px">
+
+            <!-- ✅ Mode Toggle -->
+            <div class="mode-toggle">
+                <button id="btnSupervisor" class="mode-btn active" onclick="setMode('supervisor')">
+                    📋 Daily Print
+                </button>
+                <button id="btnInput" class="mode-btn" onclick="setMode('input')">
+                    ✏️ Input
+                </button>
+                <button id="btnTest" class="mode-btn" onclick="setMode('test')">
+                    🧪 Test
+                </button>
+            </div>
+
+            <button onclick="printPage()">🖨 Print</button>
+        </div>
+
+        <!-- Row 2: Search / Upload -->
+        <div class="top-bar-row">
+            <label>Search:</label>
+            <input type="text" id="searchInput"
+                   placeholder="Name / Mobile / ID"
+                   oninput="generateTable()"
+                   autocomplete="off" autocorrect="off"
+                   autocapitalize="off" spellcheck="false"
+                   style="flex:1;min-width:140px">
+
+            <input type="file" id="excelFile" accept=".xlsx,.xls"
+                   style="display:none" onchange="uploadExcel()">
+            <button onclick="document.getElementById('excelFile').click()">📂 Upload Excel</button>
+
+            <button onclick="generateTable()">⟳ Generate</button>
+        </div>
+
+        <!-- Mode label -->
+        <div id="modeLabel" class="mode-label supervisor-label">
+            📋 Daily Print Mode — Clean printout, no editable fields
+        </div>
+
+    </div>
+
+    <!-- Time Picker Modal (Input mode only) -->
+    <div id="timePicker" style="
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,0.45);
+        z-index:9999;
+        align-items:center;
+        justify-content:center;
+    ">
+        <div style="
+            background:#fff;
+            border-radius:16px;
+            padding:24px 20px 20px;
+            width:260px;
+            text-align:center;
+            box-shadow:0 8px 32px rgba(0,0,0,0.25);
+        ">
+            <div style="font-size:15px;font-weight:bold;color:#1e3a8a;margin-bottom:14px;">Select Time</div>
+            <input type="time" id="timePickerInput" style="
+                width:100%;height:48px;font-size:24px;
+                border:2px solid #2563eb;border-radius:8px;
+                text-align:center;padding:4px;
+                box-sizing:border-box;outline:none;">
+            <div style="margin-top:12px;">
+                <button onclick="setNowTimeMobile()" style="
+                    width:100%;height:40px;
+                    background:#f0fdf4;color:#16a34a;
+                    border:2px solid #86efac;border-radius:8px;
+                    font-size:14px;font-weight:700;cursor:pointer;
+                    letter-spacing:0.5px;">
+                    ⚡ Now
+                </button>
+            </div>
+            <div style="display:flex;gap:12px;margin-top:8px;">
+                <button onclick="cancelTime()" style="
+                    flex:1;height:42px;background:#e5e7eb;color:#374151;
+                    border:none;border-radius:8px;font-size:15px;cursor:pointer;">
+                    Cancel
+                </button>
+                <button onclick="confirmTime()" style="
+                    flex:1;height:42px;background:#2563eb;color:#fff;
+                    border:none;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Grid Time Picker — all devices -->
+    <div id="modernTimePicker" style="
+        display:none;position:fixed;inset:0;
+        background:rgba(0,0,0,0.5);z-index:10000;
+        align-items:center;justify-content:center;
+        padding:16px;">
+        <div style="
+            background:#fff;border-radius:20px;
+            width:min(360px,100%);
+            box-shadow:0 20px 60px rgba(0,0,0,0.3);
+            overflow:hidden;">
+
+            <!-- Header -->
+            <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);
+                        padding:14px 20px;display:flex;
+                        align-items:center;justify-content:space-between;">
+                <div id="modernTimeLabel" style="color:rgba(255,255,255,0.85);
+                     font-size:13px;font-weight:600;"></div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <button onclick="setNowTimeDesktop()" type="button" style="
+                        background:rgba(255,255,255,0.2);color:#fff;
+                        border:1.5px solid rgba(255,255,255,0.5);
+                        border-radius:8px;padding:5px 14px;
+                        font-size:13px;font-weight:700;cursor:pointer;">
+                        ⚡ Now
+                    </button>
+                    <div id="timePreview" style="color:#fff;font-size:30px;
+                         font-weight:800;letter-spacing:3px;
+                         font-family:monospace;">--:--</div>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div style="display:flex;gap:0;padding:14px 14px 0;">
+
+                <!-- Hour grid -->
+                <div style="flex:1;padding-right:10px;
+                            border-right:1px solid #e2e8f0;">
+                    <div style="font-size:10px;font-weight:700;color:#64748b;
+                                letter-spacing:1px;margin-bottom:8px;">HOUR</div>
+                    <div id="hourGrid" style="
+                        display:grid;grid-template-columns:repeat(4,1fr);
+                        gap:6px;"></div>
+                </div>
+
+                <!-- Minute scroll list -->
+                <div style="width:90px;padding-left:10px;">
+                    <div style="font-size:10px;font-weight:700;color:#64748b;
+                                letter-spacing:1px;margin-bottom:8px;">MINUTE</div>
+                    <div id="minScrollList" style="
+                        height:200px;
+                        overflow-y:auto;
+                        -webkit-overflow-scrolling:touch;
+                        border:1.5px solid #e2e8f0;
+                        border-radius:10px;
+                        background:#f8fafc;
+                        scrollbar-width:thin;
+                        scrollbar-color:#cbd5e1 transparent;">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Buttons -->
+            <div style="display:flex;border-top:1px solid #e2e8f0;margin-top:14px;">
+                <button type="button" onclick="cancelModernTime()" style="
+                    flex:1;height:52px;background:#f8fafc;color:#64748b;
+                    border:none;font-size:16px;font-weight:600;cursor:pointer;
+                    border-radius:0 0 0 20px;-webkit-tap-highlight-color:transparent;">
+                    Cancel
+                </button>
+                <div style="width:1px;background:#e2e8f0;"></div>
+                <button type="button" onclick="confirmModernTime()" style="
+                    flex:1;height:52px;background:#fff;color:#2563eb;
+                    border:none;font-size:16px;font-weight:800;cursor:pointer;
+                    border-radius:0 0 20px 0;-webkit-tap-highlight-color:transparent;">
+                    ✓ OK
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <div id="tableContainer"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+    <div class="print-brand">Operation D 😇</div>
+
+</body>
+</html>
